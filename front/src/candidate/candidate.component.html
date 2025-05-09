@@ -7,21 +7,89 @@
   <mat-form-field appearance="fill" class="form-field">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" required />
+
+    <mat-error
+      *ngIf="
+        candidateForm.get('name')?.hasError('required') &&
+        candidateForm.get('name')?.touched
+      "
+    >
+      Name is required
+    </mat-error>
+
+    <mat-error
+      *ngIf="
+        candidateForm.get('name')?.hasError('pattern') &&
+        candidateForm.get('name')?.touched &&
+        !candidateForm.get('name')?.hasError('required')
+      "
+    >
+      Only letters and spaces are allowed
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="form-field">
     <mat-label>Surname</mat-label>
     <input matInput formControlName="surname" required />
+
+    <mat-error
+      *ngIf="
+        candidateForm.get('surname')?.hasError('required') &&
+        candidateForm.get('surname')?.touched
+      "
+    >
+      Surname is required
+    </mat-error>
+
+    <mat-error
+      *ngIf="
+        candidateForm.get('surname')?.hasError('pattern') &&
+        candidateForm.get('surname')?.touched &&
+        !candidateForm.get('surname')?.hasError('required')
+      "
+    >
+      Only letters and spaces are allowed
+    </mat-error>
   </mat-form-field>
 
   <div class="file-upload">
-    <input type="file" (change)="onFileChange($event)" required />
-  </div>
+    <label for="file" class="file-label">Upload Excel file</label>
 
-  <div class="submit-wrapper">
+    <input
+      #fileInput
+      type="file"
+      id="file"
+      (change)="onFileChange($event)"
+      required
+      hidden
+    />
+
     <button
       mat-raised-button
-      color="primary"
+      color="accent"
+      type="button"
+      (click)="fileInput.click()"
+    >
+      Browse File
+    </button>
+
+    <span *ngIf="selectedFileName" class="file-name">
+      📄 {{ selectedFileName }}
+    </span>
+  </div>
+  <div class="button-group">
+    <button
+      mat-raised-button
+      color="accent"
+      type="button"
+      (click)="showCandidates()"
+      class="cancel-button"
+    >
+      Show Candidates
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
       type="submit"
       [disabled]="candidateForm.invalid"
       class="submit-button"

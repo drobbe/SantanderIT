@@ -1,0 +1,56 @@
+.candidate-dialog {
+  padding: 2rem;
+  width: 635px;
+  margin: 0 auto;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-title {
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+  font-size: 30px;
+}
+
+.close-bnt {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.close-bnt:hover {
+  color: #e53935;
+}
+
+.mat-elevation-z8 {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.table-header-row {
+  background-color: #1b0147;
+}
+
+.table-header-row .table-cell {
+  color: white;
+}
+.table-row:hover {
+  background-color: #bdc0ff;
+  transition: background-color 0.3s ease;
+}

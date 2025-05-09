@@ -2,20 +2,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background: #000000;
+  min-height: calc(100vh - 92px);
 }
 
 .candidate-form {
   width: 100%;
-  max-width: 500px;
-  padding: 2rem;
+  max-width: 480px;
+  padding: 2.5rem;
   background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.8rem;
 }
 
 .form-field {
@@ -23,18 +22,33 @@
 }
 
 .file-upload {
-  input[type="file"] {
-    display: block;
-    margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+  }
+
+  .file-name {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 0.2rem;
   }
 }
 
-.submit-wrapper {
+.button-group {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
 }
 
-.submit-button {
+.submit-button,
+.cancel-button {
   min-width: 120px;
-  font-weight: 500;
+  font-weight: 600;
+  border-radius: 999px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
