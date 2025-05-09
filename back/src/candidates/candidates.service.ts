@@ -69,10 +69,12 @@ export class CandidatesService {
     };
 
     this.candidates.push(candidate);
+    console.log(this.candidates);
     return candidate;
   }
 
   getAllCandidates(): CombinedCandidate[] {
+    console.log(this.candidates);
     return this.candidates;
   }
 }
