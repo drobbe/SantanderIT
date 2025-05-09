@@ -1,0 +1,13 @@
+{
+  "name": "project-root",
+  "workspaces": [
+    "back",
+    "front"
+  ],
+  "scripts": {
+    "start:all": "concurrently \"npm run start --prefix back\" \"npm run start --prefix front\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}

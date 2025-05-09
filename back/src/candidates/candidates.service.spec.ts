@@ -1,75 +1,65 @@
-import { CandidatesService } from './candidates.service';
-import { BadRequestException } from '@nestjs/common';
 import * as fs from 'fs';
 import * as xlsx from 'xlsx';
-
-jest.mock('fs');
-jest.mock('xlsx');
+import { CandidatesService } from './candidates.service';
+import { CandidateRowDto } from './dto/candidate-row.dto';
+import { CreateCandidateDto } from './dto/create-candidate.dto';
 
 describe('CandidatesService', () => {
   let service: CandidatesService;
 
+  const mockBody: CreateCandidateDto = {
+    name: 'John',
+    surname: 'Doe',
+  };
+
   beforeEach(() => {
     service = new CandidatesService();
+    jest.spyOn(fs, 'unlinkSync').mockImplementation(() => {}); // prevent deleting real files
   });
 
-  describe('processExcel', () => {
-    const mockFilePath = 'mock.xlsx';
+  it('should correctly process a valid Excel file', () => {
+    jest.spyOn(xlsx, 'readFile').mockReturnValueOnce({
+      SheetNames: ['Sheet1'],
+      Sheets: {
+        Sheet1: xlsx.utils.json_to_sheet([
+          {
+            seniority: 'Senior',
+            years: 5,
+            availability: true,
+          },
+        ]),
+      },
+    } as any);
 
-    it('should throw if the Excel has more than one row', () => {
-      (xlsx.readFile as jest.Mock).mockReturnValue({
-        SheetNames: ['Sheet1'],
-        Sheets: {
-          Sheet1: {},
-        },
-      });
-
-      (xlsx.utils.sheet_to_json as jest.Mock).mockReturnValue([
-        { seniority: 'junior' },
-        { seniority: 'senior' },
-      ]);
-
-      expect(() => service.processExcel(mockFilePath)).toThrow(BadRequestException);
-    });
-
-    it('should process a valid Excel and delete the file', () => {
-      const mockData = [{ seniority: 'senior', years: '5', availability: 'true' }];
-      (xlsx.readFile as jest.Mock).mockReturnValue({
-        SheetNames: ['Sheet1'],
-        Sheets: {
-          Sheet1: {},
-        },
-      });
-
-      (xlsx.utils.sheet_to_json as jest.Mock).mockReturnValue(mockData);
-
-      const result = service.processExcel(mockFilePath);
-
-      expect(fs.unlinkSync).toHaveBeenCalledWith(mockFilePath);
-      expect(result).toEqual({
-        seniority: 'senior',
-        years: 5,
-        availability: true,
-      });
-    });
+    const result = service.processExcel(mockBody, 'file.xlsx');
+    expect(result).toBeInstanceOf(CandidateRowDto);
+    expect(service.getAllCandidates().length).toBe(1);
   });
 
-  describe('processCandidate', () => {
-    it('should combine form and row data and store the result', () => {
-      const form = { name: 'Ana', surname: 'Pérez' };
-      const row = { seniority: 'junior', years: 2, availability: true };
+  it('should throw an error if there is more than one row', () => {
+    jest.spyOn(xlsx, 'readFile').mockReturnValueOnce({
+      SheetNames: ['Sheet1'],
+      Sheets: {
+        Sheet1: xlsx.utils.json_to_sheet([
+          { seniority: 'Mid', years: 2, availability: true },
+          { seniority: 'Senior', years: 5, availability: false },
+        ]),
+      },
+    } as any);
 
-      const result = service.processCandidate(form, row);
+    expect(() => service.processExcel(mockBody, 'file.xlsx')).toThrowError(
+      'The file must contain exactly one row.',
+    );
+  });
 
-      expect(result).toEqual({
-        name: 'Ana',
-        surname: 'Pérez',
-        seniority: 'junior',
-        years: 2,
-        availability: true,
-      });
+  it('should throw an error if the data is invalid', () => {
+    jest.spyOn(xlsx, 'readFile').mockReturnValueOnce({
+      SheetNames: ['Sheet1'],
+      Sheets: {
+        Sheet1: xlsx.utils.json_to_sheet([{ seniority: '', years: '', availability: 'invalid' }]),
+      },
+    } as any);
 
-      expect(service.getAllCandidates()).toContainEqual(result);
-    });
+    expect(() => service.processExcel(mockBody, 'file.xlsx')).toThrowError(/Validation error/);
   });
 });

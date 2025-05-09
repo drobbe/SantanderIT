@@ -23,7 +23,7 @@ export interface CombinedCandidate {
 @Injectable()
 export class CandidatesService {
   private candidates: CombinedCandidate[] = [];
-  processExcel(filePath: string): CandidateRowDto {
+  processExcel(body: CreateCandidateDto, filePath: string): CandidateRowDto {
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
@@ -32,7 +32,7 @@ export class CandidatesService {
     fs.unlinkSync(filePath);
 
     if (data.length !== 1) {
-      throw new BadRequestException('El archivo debe contener exactamente una fila');
+      throw new BadRequestException('The file must contain exactly one row.');
     }
 
     const row = data[0];
@@ -53,16 +53,16 @@ export class CandidatesService {
       const messages = errors
         .map((err) => Object.values(err.constraints || {}).join(', '))
         .join('; ');
-      throw new BadRequestException(`Error de validación: ${messages}`);
+      throw new BadRequestException(`Validation error: ${messages}`);
     }
-
+    this.processCandidate(body, candidateDto);
     return candidateDto;
   }
 
-  processCandidate(form: CreateCandidateDto, row: CandidateRowDto): CombinedCandidate {
+  processCandidate(body: CreateCandidateDto, row: CandidateRowDto): CombinedCandidate {
     const candidate: CombinedCandidate = {
-      name: form.name,
-      surname: form.surname,
+      name: body.name,
+      surname: body.surname,
       seniority: row.seniority,
       years: row.years,
       availability: row.availability,
