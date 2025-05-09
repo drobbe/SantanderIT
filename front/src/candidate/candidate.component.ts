@@ -103,11 +103,8 @@ export class CandidateComponent {
         });
       },
       error: (err) => {
-        const apiMsg = err.error?.message;
-        this.snackBar.open(apiMsg, 'close', {
-          duration: 3000,
-        });
-        console.error('Upload error:', err);
+        const apiMsg = err?.error?.message || 'Unexpected error';
+        this.snackBar.open(apiMsg, 'Close', { duration: 3000 });
       },
     });
   }

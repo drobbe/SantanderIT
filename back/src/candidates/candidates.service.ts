@@ -23,7 +23,7 @@ export interface CombinedCandidate {
 @Injectable()
 export class CandidatesService {
   private candidates: CombinedCandidate[] = [];
-  processExcel(filePath: string): CandidateRowDto {
+  processExcel(body: CreateCandidateDto, filePath: string): CandidateRowDto {
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
     const sheet = workbook.Sheets[sheetName];
@@ -55,24 +55,27 @@ export class CandidatesService {
         .join('; ');
       throw new BadRequestException(`Error de validación: ${messages}`);
     }
+    this.processCandidate(body, candidateDto);
 
     return candidateDto;
   }
 
-  processCandidate(form: CreateCandidateDto, row: CandidateRowDto): CombinedCandidate {
+  processCandidate(body: CreateCandidateDto, row: CandidateRowDto): CombinedCandidate {
     const candidate: CombinedCandidate = {
-      name: form.name,
-      surname: form.surname,
+      name: body.name,
+      surname: body.surname,
       seniority: row.seniority,
       years: row.years,
       availability: row.availability,
     };
 
     this.candidates.push(candidate);
+    console.log(this.candidates);
     return candidate;
   }
 
   getAllCandidates(): CombinedCandidate[] {
+    console.log(this.candidates);
     return this.candidates;
   }
 }

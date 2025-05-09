@@ -31,7 +31,7 @@ export class CandidatesController {
     if (!file || !file?.path) {
       throw new Error('File is missing or invalid');
     }
-    const excelData = this.candidatesService.processExcel(file.path);
+    const excelData = this.candidatesService.processExcel(body, file.path);
 
     return { ...excelData, ...body };
   }

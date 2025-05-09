@@ -9,6 +9,4 @@ import { CandidateComponent } from '../candidate/candidate.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
-  title = 'front';
-}
+export class AppComponent {}
