@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #000000;
+}
+
+.candidate-form {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.file-upload {
+  input[type="file"] {
+    display: block;
+    margin-top: 0.5rem;
+  }
+}
+
+.submit-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-button {
+  min-width: 120px;
+  font-weight: 500;
+}
